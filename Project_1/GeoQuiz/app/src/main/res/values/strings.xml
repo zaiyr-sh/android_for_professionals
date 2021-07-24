@@ -12,4 +12,5 @@
     <string name="prev_button">Previous</string>
     <string name="correct_toast">Correct! </string>
     <string name="incorrect_toast">Incorrect! </string>
+    <string name="number_correct_answer">Finish! Correct answer: %d</string>
 </resources>

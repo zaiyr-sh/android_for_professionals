@@ -1,7 +1,10 @@
 package com.bignerdranch.android.geomain
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -26,12 +29,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
     private lateinit var numberCorrectAnswerTextView: TextView
-    private var countCorrectAnswer = 0
+    private lateinit var sdkVersionTextView: TextView
 
     private val quizViewModel: QuizViewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
@@ -48,6 +52,9 @@ class MainActivity : AppCompatActivity() {
         cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
         numberCorrectAnswerTextView = findViewById(R.id.number_correct_answer_text_view)
+        sdkVersionTextView = findViewById(R.id.sdk_version_text_view)
+
+        sdkVersionTextView.text = getString(R.string.sdk_version_text, Build.VERSION.SDK_INT)
 
         trueButton.setOnClickListener {
             checkAnswer(true)
@@ -70,15 +77,18 @@ class MainActivity : AppCompatActivity() {
             quizViewModel.isCheater = false
 
             if (quizViewModel.currentIndex == 0) {
-                Toast.makeText(this, "You use cheats ${quizViewModel.cheatingCount} times!", Toast.LENGTH_SHORT).show()
                 quizViewModel.cheatingCount = 0
             }
         }
 
-        cheatButton.setOnClickListener {
+        cheatButton.setOnClickListener { view ->
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val options =
+                    ActivityOptions.makeClipRevealAnimation(view, 0, 0, view.width, view.height)
+                startActivityForResult(intent, REQUEST_CODE_CHEAT, options.toBundle())
+            } else startActivityForResult(intent, REQUEST_CODE_CHEAT)
         }
 
         questionTextView.setOnClickListener {
@@ -100,6 +110,10 @@ class MainActivity : AppCompatActivity() {
                     data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
                 if (quizViewModel.isCheater) {
                     quizViewModel.cheatingCount++
+                    Toast.makeText(this, "You use cheats ${quizViewModel.cheatingCount} times!", Toast.LENGTH_SHORT).show()
+                }
+                if (quizViewModel.cheatingCount >= 3) {
+                    cheatButton.isEnabled = false
                 }
             }
     }

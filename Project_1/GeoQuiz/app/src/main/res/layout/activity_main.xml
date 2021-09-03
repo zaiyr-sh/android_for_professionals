@@ -69,4 +69,12 @@
         android:padding="24dp"
         tools:text="@string/number_correct_answer" />
 
+    <TextView
+        android:id="@+id/sdk_version_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="24dp"
+        tools:text="@string/sdk_version_text" />
+
 </LinearLayout>

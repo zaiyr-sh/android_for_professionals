@@ -8,7 +8,9 @@
         <entry key="app/src/main/res/layout/fragment_crime.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_crime_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/list_item_crime.xml" value="0.49896907216494846" />
+        <entry key="app/src/main/res/layout/list_item_empty.xml" value="0.1671195652173913" />
         <entry key="app/src/main/res/layout/list_item_serious_crime.xml" value="0.375" />
+        <entry key="app/src/main/res/menu/fragment_crime_list.xml" value="0.375" />
       </map>
     </option>
   </component>
